@@ -2,13 +2,34 @@
   "name": "ofx",
   "displayName": "OFX Language Support",
   "description": "Language support for Open Financial Exchange (OFX) files",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "icon": "imgs/icon.png",
+  "galleryBanner": {
+    "color": "#2A5286",
+    "theme": "dark"
+  },
+  "publisher": "wilfison",
+  "author": {
+    "name": "wilfison",
+    "url": "https://github.com/wilfison"
+  },
+  "repository": {
+    "url": "https://github.com/wilfison/vscode-ofx"
+  },
   "engines": {
     "vscode": "^1.105.0"
   },
   "categories": [
-    "Programming Languages"
+    "Programming Languages",
+    "Formatters"
   ],
+  "tags": [
+    "OFX",
+    "Open Financial Exchange",
+    "Finance",
+    "Accounting"
+  ],
+  "license": "MIT",
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {

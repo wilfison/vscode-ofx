@@ -31,28 +31,6 @@ This extension provides syntax highlighting and language support for OFX (Open F
 - **Indentation**: Smart indentation for nested OFX structures
 - **Comment support**: Block comments using `<!-- -->` syntax
 
-## File Extensions
-
-The extension automatically activates for files with the `.ofx` extension.
-
-## Usage
-
-Simply open any `.ofx` file in VS Code and the syntax highlighting will be applied automatically.
-
-### Formatting OFX Files
-
-To format an OFX document:
-
-1. Open an `.ofx` file
-2. Press `Shift+Alt+F` (Windows/Linux) or `Shift+Option+F` (Mac)
-3. Or right-click in the editor and select "Format Document"
-
-The formatter will:
-
-- Keep header lines (KEY:VALUE) unindented
-- Properly indent nested XML/SGML tags
-- Handle both OFX 1.x (SGML) and OFX 2.x (XML) formats
-
 ## OFX Format Support
 
 This extension supports both OFX formats:
@@ -60,14 +38,22 @@ This extension supports both OFX formats:
 - **SGML format** (OFX 1.x): Tags without explicit closing
 - **XML format** (OFX 2.x): Standard XML with closing tags
 
-## Examples
+### Formatting OFX Files
 
-The extension correctly highlights OFX files from various financial institutions, including:
+To format an OFX document:
 
-- Banking statements
-- Credit card transactions
-- Investment accounts
-- And more
+1. Open an `.ofx` file
+2. Press:
+   - `Shift+Alt+F` (Windows)
+   - `Ctrl+Shift+I` (Linux)
+   - `⇧⌥F` (Mac)
+3. Or right-click in the editor and select "Format Document"
+
+The formatter will:
+
+- Keep header lines (KEY:VALUE) unindented
+- Properly indent nested XML/SGML tags
+- Handle both OFX 1.x (SGML) and OFX 2.x (XML) formats
 
 ## Configuration
 
@@ -81,23 +67,11 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-None at this time. Please report issues on the GitHub repository.
-
-## Release Notes
-
-### 0.0.1
-
-Initial release of OFX Language Support
-
-- Syntax highlighting for OFX files
-- Language configuration for auto-closing, folding, and indentation
-- Support for both SGML and XML OFX formats
-- Document formatting with proper indentation
-- Configuration option to enable/disable formatting
+None at this time. Please report issues on the [GitHub repository](https://github.com/wilfison/vscode-ofx).
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit issues or pull requests.
+Contributions are welcome! Please feel free to submit [issues](https://github.com/wilfison/vscode-ofx/issues) or [pull requests](https://github.com/wilfison/vscode-ofx/pulls).
 
 ## License
 
