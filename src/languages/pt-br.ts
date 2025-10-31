@@ -1,4 +1,4 @@
-import { OFXTagDescriptions } from "../types/ofxTagDescriptions";
+import { OFXTagDescriptions } from "../types";
 
 /**
  * Portuguese (Brazil) descriptions for OFX tags

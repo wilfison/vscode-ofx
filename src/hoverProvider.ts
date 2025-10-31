@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { getTagDescription } from "./languages";
+import { TRANSACTION_TYPES } from "./constants";
 
 /**
  * Provides hover information for OFX tags
@@ -32,6 +33,7 @@ export class OFXHoverProvider implements vscode.HoverProvider {
     // Check if this is actually a tag (enclosed in < >)
     const line = document.lineAt(position.line).text;
     const wordStart = wordRange.start.character;
+    const isTransactionType = TRANSACTION_TYPES.includes(word);
 
     // Look for opening tag
     let isTag = false;
@@ -39,7 +41,7 @@ export class OFXHoverProvider implements vscode.HoverProvider {
       isTag = true;
     }
 
-    if (!isTag) {
+    if (!isTag && !isTransactionType) {
       return undefined;
     }
 
