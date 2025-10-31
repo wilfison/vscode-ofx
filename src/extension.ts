@@ -12,9 +12,6 @@ export function activate(context: vscode.ExtensionContext) {
   const hoverProvider = vscode.languages.registerHoverProvider("ofx", new OFXHoverProvider());
 
   context.subscriptions.push(formattingProvider, hoverProvider);
-
-  // Future enhancements can include:
-  // - Validation and diagnostics
 }
 
 export function deactivate() {}
