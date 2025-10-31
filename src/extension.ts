@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 
 import { OFXDocumentFormattingProvider } from "./formatter";
+import { OFXHoverProvider } from "./hoverProvider";
 
 export function activate(context: vscode.ExtensionContext) {
   const formattingProvider = vscode.languages.registerDocumentFormattingEditProvider(
@@ -8,10 +9,11 @@ export function activate(context: vscode.ExtensionContext) {
     new OFXDocumentFormattingProvider()
   );
 
-  context.subscriptions.push(formattingProvider);
+  const hoverProvider = vscode.languages.registerHoverProvider("ofx", new OFXHoverProvider());
+
+  context.subscriptions.push(formattingProvider, hoverProvider);
 
   // Future enhancements can include:
-  // - Hover provider for OFX tag information
   // - Validation and diagnostics
 }
 
