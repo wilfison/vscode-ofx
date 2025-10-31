@@ -1,71 +1,79 @@
-# ofx README
+# OFX Language Support
 
-This is the README for your extension "ofx". After writing up a brief description, we recommend including the following sections.
+Language support for Open Financial Exchange (OFX) files in Visual Studio Code.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+This extension provides syntax highlighting and language support for OFX (Open Financial Exchange) files, commonly used by financial institutions to exchange financial data.
 
-For example if there is an image subfolder under your extension project workspace:
+### Syntax Highlighting
 
-\!\[feature X\]\(images/feature-x.png\)
+- **Header fields**: Highlights OFX header fields like `OFXHEADER`, `DATA`, `VERSION`, etc.
+- **XML/SGML tags**: Recognizes both XML-style tags with closing tags and SGML-style tags without explicit closing
+- **Data types**: Distinguishes between different value types:
+  - Numeric values (integers and decimals)
+  - Date/time values with timezone information
+  - Currency codes (BRL, USD, EUR)
+  - Transaction types (CREDIT, DEBIT)
+  - Status values (INFO, WARN, ERROR)
+  - Account types (CHECKING, SAVINGS)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+### Language Features
+
+- **Auto-closing tags**: Automatically closes OFX tags
+- **Bracket matching**: Highlights matching opening and closing tags
+- **Code folding**: Fold/unfold OFX tag blocks for better readability
+- **Indentation**: Smart indentation for nested OFX structures
+- **Comment support**: Block comments using `<!-- -->` syntax
+
+## File Extensions
+
+The extension automatically activates for files with the `.ofx` extension.
+
+## Usage
+
+Simply open any `.ofx` file in VS Code and the syntax highlighting will be applied automatically.
+
+## OFX Format Support
+
+This extension supports both OFX formats:
+
+- **SGML format** (OFX 1.x): Tags without explicit closing
+- **XML format** (OFX 2.x): Standard XML with closing tags
+
+## Examples
+
+The extension correctly highlights OFX files from various financial institutions, including:
+
+- Banking statements
+- Credit card transactions
+- Investment accounts
+- And more
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+- Visual Studio Code 1.105.0 or higher
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+None at this time. Please report issues on the GitHub repository.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.0.1
 
-### 1.0.0
+Initial release of OFX Language Support
 
-Initial release of ...
+- Syntax highlighting for OFX files
+- Language configuration for auto-closing, folding, and indentation
+- Support for both SGML and XML OFX formats
 
-### 1.0.1
+## Contributing
 
-Fixed issue #.
+Contributions are welcome! Please feel free to submit issues or pull requests.
 
-### 1.1.0
+## License
 
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+This extension is licensed under the MIT License.
 
 **Enjoy!**

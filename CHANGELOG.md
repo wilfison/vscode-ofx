@@ -1,9 +1,19 @@
 # Change Log
 
-All notable changes to the "ofx" extension will be documented in this file.
+All notable changes to the "OFX Language Support" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## [0.0.1] - 2025-10-31
 
-## [Unreleased]
+### Added
 
 - Initial release
+- Syntax highlighting for OFX (Open Financial Exchange) files
+- Support for both SGML (OFX 1.x) and XML (OFX 2.x) formats
+- Language configuration with auto-closing tags
+- Code folding support for OFX tag blocks
+- Smart indentation for nested structures
+- Bracket matching for opening and closing tags
+- Comment support using `<!-- -->` syntax
+- Recognition of OFX header fields
+- Highlighting for data types: numeric values, dates, currency codes, transaction types
+- File association for `.ofx` extension

@@ -1,0 +1,18 @@
+{
+  "comments": {
+    "blockComment": ["<!--", "-->"]
+  },
+  "brackets": [["<", ">"]],
+  "autoClosingPairs": [{ "open": "<", "close": ">" }],
+  "surroundingPairs": [{ "open": "<", "close": ">" }],
+  "folding": {
+    "markers": {
+      "start": "^\\s*<([A-Z][A-Z0-9]*)>",
+      "end": "^\\s*</([A-Z][A-Z0-9]*)>"
+    }
+  },
+  "indentationRules": {
+    "increaseIndentPattern": "^\\s*<(?!\\?)([A-Z][A-Z0-9]*)(?=\\s|>)[^>]*>(?!</\\1>)\\s*$",
+    "decreaseIndentPattern": "^\\s*</([A-Z][A-Z0-9]*)>\\s*$"
+  }
+}

@@ -1,21 +1,35 @@
 {
   "name": "ofx",
-  "displayName": "OFX",
-  "description": "",
+  "displayName": "OFX Language Support",
+  "description": "Language support for Open Financial Exchange (OFX) files",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.105.0"
   },
   "categories": [
-    "Other"
+    "Programming Languages"
   ],
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
+    "languages": [
       {
-        "command": "ofx.helloWorld",
-        "title": "Hello World"
+        "id": "ofx",
+        "aliases": [
+          "OFX",
+          "Open Financial Exchange"
+        ],
+        "extensions": [
+          ".ofx"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "ofx",
+        "scopeName": "text.ofx",
+        "path": "./syntaxes/ofx.tmLanguage.json"
       }
     ]
   },

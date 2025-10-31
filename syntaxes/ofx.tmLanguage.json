@@ -1,0 +1,145 @@
+{
+  "name": "OFX",
+  "scopeName": "text.ofx",
+  "patterns": [
+    {
+      "include": "#header"
+    },
+    {
+      "include": "#xml-tags"
+    },
+    {
+      "include": "#sgml-tags"
+    },
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#values"
+    }
+  ],
+  "repository": {
+    "header": {
+      "patterns": [
+        {
+          "match": "^([A-Z]+):(.*?)$",
+          "captures": {
+            "1": {
+              "name": "keyword.control.ofx"
+            },
+            "2": {
+              "name": "string.unquoted.ofx"
+            }
+          },
+          "name": "meta.header.ofx"
+        }
+      ]
+    },
+    "xml-tags": {
+      "patterns": [
+        {
+          "begin": "(<)([A-Z][A-Z0-9]*)(>)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.begin.ofx"
+            },
+            "2": {
+              "name": "entity.name.tag.ofx"
+            },
+            "3": {
+              "name": "punctuation.definition.tag.end.ofx"
+            }
+          },
+          "end": "(</)([A-Z][A-Z0-9]*)(>)",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.begin.ofx"
+            },
+            "2": {
+              "name": "entity.name.tag.ofx"
+            },
+            "3": {
+              "name": "punctuation.definition.tag.end.ofx"
+            }
+          },
+          "name": "meta.tag.xml.ofx",
+          "patterns": [
+            {
+              "include": "#xml-tags"
+            },
+            {
+              "include": "#sgml-tags"
+            },
+            {
+              "include": "#values"
+            }
+          ]
+        }
+      ]
+    },
+    "sgml-tags": {
+      "patterns": [
+        {
+          "match": "(<)([A-Z][A-Z0-9]*)(?=>|\\s)",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.tag.ofx"
+            },
+            "2": {
+              "name": "entity.name.tag.ofx"
+            }
+          },
+          "name": "meta.tag.sgml.ofx"
+        },
+        {
+          "match": "(</)([A-Z][A-Z0-9]*)(>)",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.tag.ofx"
+            },
+            "2": {
+              "name": "entity.name.tag.ofx"
+            },
+            "3": {
+              "name": "punctuation.definition.tag.ofx"
+            }
+          },
+          "name": "meta.tag.sgml.close.ofx"
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "begin": "<!--",
+          "end": "-->",
+          "name": "comment.block.ofx"
+        }
+      ]
+    },
+    "values": {
+      "patterns": [
+        {
+          "match": "\\b[0-9]{14}(\\[-?[0-9]+:[A-Z]+\\])?\\b",
+          "name": "constant.numeric.datetime.ofx"
+        },
+        {
+          "match": "\\b-?[0-9]+\\.[0-9]+\\b",
+          "name": "constant.numeric.decimal.ofx"
+        },
+        {
+          "match": "\\b-?[0-9]+,[0-9]+\\b",
+          "name": "constant.numeric.decimal.ofx"
+        },
+        {
+          "match": "\\b[0-9]+\\b",
+          "name": "constant.numeric.integer.ofx"
+        },
+        {
+          "match": "\\b(INFO|WARN|ERROR|CREDIT|DEBIT|CHECKING|SAVINGS|BRL|USD|EUR|POR|ENG)\\b",
+          "name": "constant.language.ofx"
+        }
+      ]
+    }
+  }
+}
