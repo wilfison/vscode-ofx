@@ -17,3 +17,8 @@ All notable changes to the "OFX Language Support" extension will be documented i
 - Recognition of OFX header fields
 - Highlighting for data types: numeric values, dates, currency codes, transaction types
 - File association for `.ofx` extension
+- **Document formatting provider** for automatic code formatting
+  - Proper indentation of nested tags
+  - Handles both SGML and XML formats
+  - Preserves header section formatting
+  - Configurable via `ofx.format.enable` setting

@@ -31,7 +31,17 @@
         "scopeName": "text.ofx",
         "path": "./syntaxes/ofx.tmLanguage.json"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "OFX",
+      "properties": {
+        "ofx.format.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable OFX document formatting"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
