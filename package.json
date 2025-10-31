@@ -1,6 +1,6 @@
 {
   "name": "ofx",
-  "displayName": "OFX Language Support",
+  "displayName": "OFX File Support",
   "description": "Language support for Open Financial Exchange (OFX) files",
   "version": "1.0.0",
   "icon": "imgs/icon.png",

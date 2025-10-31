@@ -1,4 +1,4 @@
-# OFX Language Support
+# OFX File Support
 
 Language support for Open Financial Exchange (OFX) files in Visual Studio Code.
 
