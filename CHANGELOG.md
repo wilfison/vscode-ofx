@@ -2,7 +2,11 @@
 
 All notable changes to the "OFX File Support" extension will be documented in this file.
 
-## [0.0.1] - 2025-10-31
+## [1.0.1] - 2025-10-31
+
+- Remake extension icon
+
+## [1.0.0] - 2025-10-31
 
 ### Added
 
