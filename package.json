@@ -33,6 +33,13 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "ofx.convertToJson",
+        "title": "Convert OFX to JSON",
+        "category": "OFX"
+      }
+    ],
     "languages": [
       {
         "id": "ofx",

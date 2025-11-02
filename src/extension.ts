@@ -2,6 +2,8 @@ import * as vscode from "vscode";
 
 import { OFXDocumentFormattingProvider } from "./formatter";
 import { OFXHoverProvider } from "./hoverProvider";
+import { OFXConverter } from "./converter";
+import { OFXCodeActionProvider } from "./codeActionProvider";
 
 export function activate(context: vscode.ExtensionContext) {
   const formattingProvider = vscode.languages.registerDocumentFormattingEditProvider(
@@ -11,7 +13,42 @@ export function activate(context: vscode.ExtensionContext) {
 
   const hoverProvider = vscode.languages.registerHoverProvider("ofx", new OFXHoverProvider());
 
-  context.subscriptions.push(formattingProvider, hoverProvider);
+  const codeActionProvider = vscode.languages.registerCodeActionsProvider(
+    "ofx",
+    new OFXCodeActionProvider(),
+    {
+      providedCodeActionKinds: [vscode.CodeActionKind.RefactorRewrite],
+    }
+  );
+
+  const convertToJsonCommand = vscode.commands.registerCommand("ofx.convertToJson", async () => {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor || editor.document.languageId !== "ofx") {
+      vscode.window.showErrorMessage("Please open an OFX file");
+      return;
+    }
+
+    const converter = new OFXConverter();
+    const text = editor.document.getText();
+
+    try {
+      const result = converter.convert(text, "json");
+      const doc = await vscode.workspace.openTextDocument({
+        content: result.content,
+        language: "json",
+      });
+      await vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
+    } catch (error) {
+      vscode.window.showErrorMessage(`Conversion failed: ${error}`);
+    }
+  });
+
+  context.subscriptions.push(
+    formattingProvider,
+    hoverProvider,
+    codeActionProvider,
+    convertToJsonCommand
+  );
 }
 
 export function deactivate() {}
