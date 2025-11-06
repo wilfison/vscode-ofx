@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 
 import ofxToJSON from "./parsers/ofx_to_json";
 import { OFXBody, OFXDocument } from "./types/ofx";
-import { currencyLocales } from "./languages";
+import { currencyLocales, getWebviewLabels } from "./languages";
 
 interface Transaction {
   type: string;
@@ -155,12 +155,12 @@ export class OFXWebviewPanel {
 
       if (stmt?.STMTRS?.BANKACCTFROM) {
         const acct = stmt.STMTRS.BANKACCTFROM;
-        accountInfo = `Bank: ${acct.BANKID} | Account: ${acct.ACCTID} | Type: ${acct.ACCTTYPE}`;
+        accountInfo = `{{LABEL_BANK}}: ${acct.BANKID} | {{LABEL_ACCOUNT}}: ${acct.ACCTID} | {{LABEL_TYPE}}: ${acct.ACCTTYPE}`;
       }
 
       if (stmt?.STMTRS?.LEDGERBAL) {
         const balance = stmt.STMTRS.LEDGERBAL;
-        accountInfo += ` | Balance: ${this.formatCurrency(balance.BALAMT)}`;
+        accountInfo += ` | {{LABEL_BALANCE}}: ${this.formatCurrency(balance.BALAMT)}`;
       }
     }
 
@@ -231,13 +231,14 @@ export class OFXWebviewPanel {
       "{{FILTER_BUTTONS}}",
       `
       <button class="filter-btn ${!filter ? "active" : ""}" onclick="filterTransactions('')">
-            All (${transactions.length})
+        All (${transactions.length})
         </button>
         ${transactionTypes
           .map(
             (type) => `
-            <button class="filter-btn ${filter === type ? "active" : ""}" 
-                    onclick="filterTransactions('${type}')">
+            <button
+              class="filter-btn ${filter === type ? "active" : ""}" 
+              onclick="filterTransactions('${type}')">
                 ${type} (${transactions.filter((t) => t.type === type).length})
             </button>
         `
@@ -265,6 +266,10 @@ export class OFXWebviewPanel {
         filteredTransactions.map((t) => this.getTransactionRowHtml(t)).join("")
       );
     }
+
+    Object.entries(getWebviewLabels()).forEach(([key, value]) => {
+      template = template.replaceAll(`{{LABEL_${key}}}`, value);
+    });
 
     return template;
   }

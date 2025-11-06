@@ -5,6 +5,9 @@ import ptBr from "./pt-br";
 
 export interface LanguageRegistry {
   ofxTags: OFXTagDescriptions;
+  webviewLabels: {
+    [key: string]: string;
+  };
 }
 
 /**
@@ -47,6 +50,10 @@ export function getLanguageDescriptions(): LanguageRegistry {
 export function getTagDescription(tag: string): string | undefined {
   const descriptions = getLanguageDescriptions().ofxTags;
   return descriptions[tag as keyof OFXTagDescriptions];
+}
+
+export function getWebviewLabels(): { [key: string]: string } {
+  return getLanguageDescriptions().webviewLabels;
 }
 
 export const currencyLocales = {

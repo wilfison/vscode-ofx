@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OFX Transactions</title>
+    <title>{{LABEL_PAGE_TITLE}}</title>
     <style>
       body {
         --ofx-income-color: #4caf50;
@@ -183,35 +183,35 @@
   </head>
   <body>
     <div class="header">
-      <h1>📊 OFX Transaction Viewer</h1>
+      <h1>📊 {{LABEL_OFX_TRANSACTION_VIEWER}}</h1>
       <div class="account-info">{{ACCOUNT_INFO}}</div>
     </div>
 
     <div class="stats">
       <div class="stat-card">
-        <div class="stat-label">Total Income</div>
+        <div class="stat-label">{{LABEL_TOTAL_INCOME}}</div>
         <div class="stat-value income">{{TOTAL_INCOME}}</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Total Expenses</div>
+        <div class="stat-label">{{LABEL_TOTAL_EXPENSES}}</div>
         <div class="stat-value expense">{{TOTAL_EXPENSES}}</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Net Balance</div>
+        <div class="stat-label">{{LABEL_NET_BALANCE}}</div>
         <div class="stat-value total">{{NET_BALANCE}}</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Total Transactions</div>
+        <div class="stat-label">{{LABEL_TOTAL_TRANSACTIONS}}</div>
         <div class="stat-value total">{{TOTAL_TRANSACTIONS}}</div>
       </div>
     </div>
 
     <div class="chart-container">
-      <h2 style="margin-top: 0">Income vs Expenses</h2>
+      <h2 style="margin-top: 0">{{LABEL_INCOME_VS_EXPENSES}}</h2>
       <div class="chart">
         <div class="bar-container">
           <div class="bar income" style="height: 0%" data-chart-parcent="{{INCOME_PERCENT}}"></div>
-          <div class="bar-label">Income {{INCOME_PERCENT}}%</div>
+          <div class="bar-label">{{LABEL_INCOME}} ({{INCOME_PERCENT}}%)</div>
         </div>
         <div class="bar-container">
           <div
@@ -219,22 +219,22 @@
             style="height: 0%"
             data-chart-parcent="{{EXPENSES_PERCENT}}"
           ></div>
-          <div class="bar-label">Expenses {{EXPENSES_PERCENT}}%</div>
+          <div class="bar-label">{{LABEL_EXPENSES}} ({{EXPENSES_PERCENT}}%)</div>
         </div>
       </div>
     </div>
 
-    <h2>Transactions</h2>
+    <h2>{{LABEL_TRANSACTIONS}}</h2>
     <div class="filters">{{FILTER_BUTTONS}}</div>
 
     <table>
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Amount</th>
-          <th>ID</th>
+          <th>{{LABEL_DATE}}</th>
+          <th>{{LABEL_TYPE}}</th>
+          <th>{{LABEL_DESCRIPTION}}</th>
+          <th>{{LABEL_AMOUNT}}</th>
+          <th>{{LABEL_ID}}</th>
         </tr>
       </thead>
       <tbody>

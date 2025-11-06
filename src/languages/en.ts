@@ -81,8 +81,30 @@ export const ofxTags: OFXTagDescriptions = {
   OTHER: "Other - Other transaction type",
 };
 
+const webviewLabels = {
+  PAGE_TITLE: "OFX Transactions",
+  INCOME: "Income",
+  EXPENSES: "Expenses",
+  OFX_TRANSACTION_VIEWER: "OFX Transaction Viewer",
+  BANK: "Bank",
+  ACCOUNT: "Account",
+  BALANCE: "Balance",
+  TOTAL_INCOME: "Total Income",
+  TOTAL_EXPENSES: "Total Expenses",
+  NET_BALANCE: "Net Balance",
+  TOTAL_TRANSACTIONS: "Total Transactions",
+  INCOME_VS_EXPENSES: "Income vs Expenses",
+  TRANSACTIONS: "Transactions",
+  DATE: "Date",
+  TYPE: "Type",
+  DESCRIPTION: "Description",
+  AMOUNT: "Amount",
+  ID: "ID",
+};
+
 const en: LanguageRegistry = {
   ofxTags,
+  webviewLabels,
 };
 
 export default en;
