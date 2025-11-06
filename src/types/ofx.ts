@@ -159,7 +159,9 @@ export interface OFXBody {
 // Complete OFX file structure
 export interface OFXDocument {
   header: OFXHeader;
-  body: OFXBody;
+  body: {
+    OFX: OFXBody;
+  };
 }
 
 // Auxiliary types for parsing

@@ -4,6 +4,8 @@ import { OFXDocumentFormattingProvider } from "./formatter";
 import { OFXHoverProvider } from "./hoverProvider";
 import { OFXConverter } from "./converter";
 import { OFXCodeActionProvider } from "./codeActionProvider";
+import { OFXCodeLensProvider } from "./codeLensProvider";
+import { OFXWebviewPanel } from "./webview_panel";
 
 export function activate(context: vscode.ExtensionContext) {
   const formattingProvider = vscode.languages.registerDocumentFormattingEditProvider(
@@ -18,6 +20,18 @@ export function activate(context: vscode.ExtensionContext) {
     new OFXCodeActionProvider(),
     {
       providedCodeActionKinds: [vscode.CodeActionKind.RefactorRewrite],
+    }
+  );
+
+  const codeLensProvider = vscode.languages.registerCodeLensProvider(
+    "ofx",
+    new OFXCodeLensProvider()
+  );
+
+  const viewTransactionsCommand = vscode.commands.registerCommand(
+    "ofx.viewTransactions",
+    async (uri: vscode.Uri) => {
+      OFXWebviewPanel.createOrShow(context.extensionUri, uri);
     }
   );
 
@@ -47,7 +61,9 @@ export function activate(context: vscode.ExtensionContext) {
     formattingProvider,
     hoverProvider,
     codeActionProvider,
-    convertToJsonCommand
+    codeLensProvider,
+    convertToJsonCommand,
+    viewTransactionsCommand
   );
 }
 

@@ -38,6 +38,11 @@
         "command": "ofx.convertToJson",
         "title": "Convert OFX to JSON",
         "category": "OFX"
+      },
+      {
+        "command": "ofx.viewTransactions",
+        "title": "View Transactions",
+        "category": "OFX"
       }
     ],
     "languages": [

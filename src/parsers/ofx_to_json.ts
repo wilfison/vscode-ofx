@@ -1,7 +1,7 @@
 import { OFXDocument } from "../types/ofx";
 
 function ofxToJSON(text: string): OFXDocument {
-  const result: OFXDocument = {
+  const result: any = {
     header: {},
     body: {},
   };
@@ -66,8 +66,8 @@ function ofxToJSON(text: string): OFXDocument {
 }
 
 function setValue(obj: any, key: string, value: string) {
-  const numValue = parseFloat(value);
-  const finalValue = !isNaN(numValue) && value.match(/^-?\d+(\.\d+)?$/) ? numValue : value;
+  const numValue = parseFloat(value.replace(/,/g, ".")); // Handle comma as decimal separator
+  const finalValue = !isNaN(numValue) && value.match(/^-?\d+([\.,]\d+)?$/) ? numValue : value;
 
   if (obj[key]) {
     if (Array.isArray(obj[key])) {

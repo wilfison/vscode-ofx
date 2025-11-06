@@ -1,5 +1,6 @@
 import * as assert from "assert";
 import ofxToJson from "../../parsers/ofx_to_json";
+import { OFXStatementTransaction } from "../../types/ofx";
 
 suite("ofxToJson Test Suite", () => {
   test("should convert OFX to JSON", () => {
@@ -203,7 +204,7 @@ NEWFILEUID:NONE
 </BANKMSGSRSV1>
 </OFX>`;
 
-    const result = ofxToJson(ofxContent);
+    const result = ofxToJson(ofxContent) as any;
 
     assert.ok(result.header);
     assert.ok(result.body);
