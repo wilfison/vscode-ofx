@@ -52,6 +52,10 @@ export function getTagDescription(tag: string): string | undefined {
   return descriptions[tag as keyof OFXTagDescriptions];
 }
 
+/**
+ * Gets the description labels for the webview UI
+ * @returns An object mapping label keys to their descriptions in the current language
+ */
 export function getWebviewLabels(): { [key: string]: string } {
   return getLanguageDescriptions().webviewLabels;
 }
