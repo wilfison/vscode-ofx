@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 
 import ofxToJSON from "./parsers/ofx_to_json";
 import { OFXBody, OFXDocument } from "./types/ofx";
+import { currencyLocales } from "./languages";
 
 interface Transaction {
   type: string;
@@ -17,6 +18,10 @@ export class OFXWebviewPanel {
   private static currentPanel: OFXWebviewPanel | undefined;
   private readonly panel: vscode.WebviewPanel;
   private disposables: vscode.Disposable[] = [];
+  private formatter: Intl.NumberFormat = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
 
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
     this.panel = panel;
@@ -47,6 +52,7 @@ export class OFXWebviewPanel {
 
     try {
       const ofxData = ofxToJSON(text);
+      this.formatter = this.buildFormatter(ofxData.body.OFX);
       const transactions = this.extractTransactions(ofxData.body.OFX);
       this.panel.webview.html = this.getHtmlContent(ofxData, transactions);
 
@@ -161,11 +167,34 @@ export class OFXWebviewPanel {
     return accountInfo;
   }
 
-  private formatCurrency(amount: number): string {
-    return new Intl.NumberFormat("en-US", {
+  private buildFormatter(ofxBody: OFXBody): Intl.NumberFormat {
+    let ofxCurrency = "USD";
+
+    if (ofxBody.BANKMSGSRSV1?.STMTTRNRS) {
+      const stmtTrnrs = ofxBody.BANKMSGSRSV1.STMTTRNRS;
+      if (Array.isArray(stmtTrnrs)) {
+        ofxCurrency = String(stmtTrnrs[0]?.STMTRS?.CURDEF);
+      } else {
+        ofxCurrency = String(stmtTrnrs?.STMTRS?.CURDEF);
+      }
+    }
+
+    if (!ofxCurrency) {
+      ofxCurrency = "USD";
+    }
+
+    const locale =
+      Object.entries(currencyLocales).find(([, v]) => v.currency === ofxCurrency)?.[1] ||
+      currencyLocales.USD;
+
+    return new Intl.NumberFormat(locale.locale, {
       style: "currency",
-      currency: "USD",
-    }).format(amount);
+      currency: locale.currency,
+    });
+  }
+
+  private formatCurrency(amount: number): string {
+    return this.formatter.format(amount);
   }
 
   private getHtmlContent(

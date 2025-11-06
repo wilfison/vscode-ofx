@@ -44,3 +44,14 @@ export function getTagDescription(tag: string): string | undefined {
   const descriptions = getLanguageDescriptions();
   return descriptions[tag as keyof OFXTagDescriptions];
 }
+
+export const currencyLocales = {
+  USD: {
+    locale: "en-US",
+    currency: "USD",
+  },
+  BRL: {
+    locale: "pt-BR",
+    currency: "BRL",
+  },
+};
