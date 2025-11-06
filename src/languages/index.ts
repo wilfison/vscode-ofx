@@ -1,12 +1,16 @@
 import * as vscode from "vscode";
 import { OFXTagDescriptions, SupportedLanguage } from "../types/tags";
-import { en } from "./en";
-import { ptBr } from "./pt-br";
+import en from "./en";
+import ptBr from "./pt-br";
+
+export interface LanguageRegistry {
+  ofxTags: OFXTagDescriptions;
+}
 
 /**
  * Language registry mapping language codes to their descriptions
  */
-const languages: Record<SupportedLanguage, OFXTagDescriptions> = {
+const languages: Record<SupportedLanguage, LanguageRegistry> = {
   en: en,
   "pt-br": ptBr,
 };
@@ -15,7 +19,7 @@ const languages: Record<SupportedLanguage, OFXTagDescriptions> = {
  * Gets the appropriate language descriptions based on VS Code's locale setting
  * Falls back to English if the locale is not supported
  */
-export function getLanguageDescriptions(): OFXTagDescriptions {
+export function getLanguageDescriptions(): LanguageRegistry {
   const locale = vscode.env.language.toLowerCase();
 
   // Direct match
@@ -41,7 +45,7 @@ export function getLanguageDescriptions(): OFXTagDescriptions {
  * @returns The description in the current language, or undefined if not found
  */
 export function getTagDescription(tag: string): string | undefined {
-  const descriptions = getLanguageDescriptions();
+  const descriptions = getLanguageDescriptions().ofxTags;
   return descriptions[tag as keyof OFXTagDescriptions];
 }
 

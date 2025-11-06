@@ -1,9 +1,10 @@
+import { LanguageRegistry } from ".";
 import { OFXTagDescriptions } from "../types/tags";
 
 /**
  * Portuguese (Brazil) descriptions for OFX tags
  */
-export const ptBr: OFXTagDescriptions = {
+const ofxTags: OFXTagDescriptions = {
   // Root elements
   OFX: "Open Financial Exchange - Elemento raiz contendo todos os dados OFX",
   SIGNONMSGSRSV1:
@@ -84,3 +85,9 @@ export const ptBr: OFXTagDescriptions = {
   REPEATPMT: "Pagamento Recorrente - Pagamento recorrente",
   OTHER: "Outro - Outro tipo de transação",
 };
+
+const ptBr: LanguageRegistry = {
+  ofxTags,
+};
+
+export default ptBr;

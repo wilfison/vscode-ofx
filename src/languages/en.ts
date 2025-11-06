@@ -1,9 +1,10 @@
+import { LanguageRegistry } from ".";
 import { OFXTagDescriptions } from "../types/tags";
 
 /**
  * English descriptions for OFX tags
  */
-export const en: OFXTagDescriptions = {
+export const ofxTags: OFXTagDescriptions = {
   // Root elements
   OFX: "Open Financial Exchange - Root element containing all OFX data",
   SIGNONMSGSRSV1: "Sign-on Message Response Set - Contains authentication and session information",
@@ -79,3 +80,9 @@ export const en: OFXTagDescriptions = {
   REPEATPMT: "Repeating Payment - Recurring payment",
   OTHER: "Other - Other transaction type",
 };
+
+const en: LanguageRegistry = {
+  ofxTags,
+};
+
+export default en;
