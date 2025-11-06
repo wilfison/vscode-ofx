@@ -2,7 +2,7 @@
 
 All notable changes to the "OFX File Support" extension will be documented in this file.
 
-## [Unreleased]
+## [1.0.2]
 
 - Add export OFX to JSON functionality
 - Add dashboard webview panel
