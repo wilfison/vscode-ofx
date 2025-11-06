@@ -248,46 +248,21 @@ export class OFXWebviewPanel {
 
     if (filteredTransactions.length === 0) {
       template = template.replace(
-        "{{TRANSACTIONS_CONTENT}}",
+        "{{TRANSACTIONS_ROWS}}",
         `
-        <div class="empty-state">
-            <p>No transactions found${filter ? ` for type: ${filter}` : ""}.</p>
-        </div>
+        <tr>
+          <td colspan="5" style="text-align: center; padding: 20px;">
+            <div class="empty-state">
+              <p>No transactions found${filter ? ` for type: ${filter}` : ""}.</p>
+            </div>
+          </td>
+        </tr>
       `
       );
     } else {
       template = template.replace(
-        "{{TRANSACTIONS_CONTENT}}",
-        `
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>ID</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${filteredTransactions
-                  .map(
-                    (t) => `
-                    <tr>
-                        <td>${t.date}</td>
-                        <td><span class="transaction-type">${t.type}</span></td>
-                        <td>${t.name || t.memo || "-"}</td>
-                        <td class="amount ${t.amount >= 0 ? "positive" : "negative"}">
-                            ${this.formatCurrency(t.amount)}
-                        </td>
-                        <td style="font-family: monospace; font-size: 12px;">${t.id}</td>
-                    </tr>
-                `
-                  )
-                  .join("")}
-            </tbody>
-        </table>
-        `
+        "{{TRANSACTIONS_ROWS}}",
+        filteredTransactions.map((t) => this.getTransactionRowHtml(t)).join("")
       );
     }
 
@@ -327,6 +302,32 @@ export class OFXWebviewPanel {
     </div>
 </body>
 </html>`;
+  }
+
+  private getTransactionRowHtml(transaction: Transaction): string {
+    const transacitionTypeClass = transaction.amount >= 0 ? "positive" : "negative";
+
+    return `
+      <tr>
+        <td>
+          ${transaction.date}
+        </td>
+        <td>
+          <span class="transaction-type ${transacitionTypeClass}">
+            ${transaction.type}
+          </span>
+        </td>
+        <td>
+          ${transaction.name || transaction.memo || "-"}
+        </td>
+        <td class="amount ${transacitionTypeClass}">
+            ${this.formatCurrency(transaction.amount)}
+        </td>
+        <td style="font-family: monospace; font-size: 12px;">
+          ${transaction.id}
+        </td>
+      </tr>
+    `;
   }
 
   public dispose() {
