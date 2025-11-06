@@ -11,12 +11,19 @@ export class OFXCodeLensProvider implements vscode.CodeLensProvider {
     const topOfDocument = new vscode.Range(0, 0, 0, 0);
 
     const viewTransactionsLens = new vscode.CodeLens(topOfDocument, {
-      title: "📊 View Transactions",
+      title: "$(dashboard) View Transactions",
       command: "ofx.viewTransactions",
       arguments: [document.uri],
     });
 
+    const exportToJsonLens = new vscode.CodeLens(topOfDocument, {
+      title: "$(json) Export to JSON",
+      command: "ofx.convertToJson",
+      arguments: [document.uri],
+    });
+
     codeLenses.push(viewTransactionsLens);
+    codeLenses.push(exportToJsonLens);
 
     return codeLenses;
   }
