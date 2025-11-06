@@ -211,6 +211,9 @@ export class OFXWebviewPanel {
       transactions.filter((t) => t.amount < 0).reduce((sum, t) => sum + t.amount, 0)
     );
 
+    const incomePercent = ((income * 100) / (income + expenses || 1)).toFixed(2);
+    const expensesPercent = ((expenses * 100) / (income + expenses || 1)).toFixed(2);
+
     const transactionTypes = Array.from(new Set(transactions.map((t) => t.type)));
     const accountInfo = this.getAccountInfo(ofxData.body.OFX);
 
@@ -221,6 +224,8 @@ export class OFXWebviewPanel {
     template = template.replace("{{TOTAL_EXPENSES}}", this.formatCurrency(expenses));
     template = template.replace("{{NET_BALANCE}}", this.formatCurrency(income - expenses));
     template = template.replace("{{TOTAL_TRANSACTIONS}}", transactions.length.toString());
+    template = template.replaceAll("{{INCOME_PERCENT}}", incomePercent);
+    template = template.replaceAll("{{EXPENSES_PERCENT}}", expensesPercent);
 
     template = template.replace(
       "{{FILTER_BUTTONS}}",

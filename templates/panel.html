@@ -74,6 +74,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: flex-end;
+        height: 100%;
       }
       .bar {
         width: 100%;
@@ -198,12 +200,16 @@
       <h2 style="margin-top: 0">Income vs Expenses</h2>
       <div class="chart">
         <div class="bar-container">
-          <div class="bar income" style="height: 50%"></div>
-          <div class="bar-label">Income</div>
+          <div class="bar income" style="height: 0%" data-chart-parcent="{{INCOME_PERCENT}}"></div>
+          <div class="bar-label">Income {{INCOME_PERCENT}}%</div>
         </div>
         <div class="bar-container">
-          <div class="bar expense" style="height: 50%"></div>
-          <div class="bar-label">Expenses</div>
+          <div
+            class="bar expense"
+            style="height: 0%"
+            data-chart-parcent="{{EXPENSES_PERCENT}}"
+          ></div>
+          <div class="bar-label">Expenses {{EXPENSES_PERCENT}}%</div>
         </div>
       </div>
     </div>
@@ -222,6 +228,16 @@
           filter: type,
         });
       }
+
+      function animateChartBars() {
+        const bars = document.querySelectorAll(".bar");
+        bars.forEach((bar) => {
+          const percent = bar.getAttribute("data-chart-parcent");
+          bar.style.height = percent + "%";
+        });
+      }
+
+      animateChartBars();
     </script>
   </body>
 </html>
