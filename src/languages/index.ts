@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { OFXTagDescriptions, SupportedLanguage } from "../types";
+import { OFXTagDescriptions, SupportedLanguage } from "../types/tags";
 import { en } from "./en";
 import { ptBr } from "./pt-br";
 

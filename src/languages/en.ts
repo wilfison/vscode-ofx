@@ -1,4 +1,4 @@
-import { OFXTagDescriptions } from "../types";
+import { OFXTagDescriptions } from "../types/tags";
 
 /**
  * English descriptions for OFX tags

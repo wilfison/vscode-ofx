@@ -1,4 +1,4 @@
-import ofxToJSON from "./converters/ofx_to_json";
+import ofxToJSON from "./parsers/ofx_to_json";
 
 export type ConversionFormat = "json";
 
@@ -23,6 +23,6 @@ export class OFXConverter {
   private toJSON(text: string): string {
     const content = ofxToJSON(text);
 
-    return content;
+    return JSON.stringify(content, null, 2);
   }
 }

@@ -1,5 +1,7 @@
-function ofxToJSON(text: string): string {
-  const result: any = {
+import { OFXDocument } from "../types/ofx";
+
+function ofxToJSON(text: string): OFXDocument {
+  const result: OFXDocument = {
     header: {},
     body: {},
   };
@@ -60,7 +62,7 @@ function ofxToJSON(text: string): string {
     }
   }
 
-  return JSON.stringify(result, null, 2);
+  return result;
 }
 
 function setValue(obj: any, key: string, value: string) {

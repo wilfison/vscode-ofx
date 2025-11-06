@@ -2,13 +2,15 @@
 
 All notable changes to the "OFX File Support" extension will be documented in this file.
 
-## [1.0.1] - 2025-10-31
+## [Unreleased]
+
+- Add export OFX to JSON functionality
+
+## [1.0.1]
 
 - Remake extension icon
 
-## [1.0.0] - 2025-10-31
-
-### Added
+## [1.0.0]
 
 - Initial release
 - Syntax highlighting for OFX (Open Financial Exchange) files

@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import ofxToJson from "../../converters/ofx_to_json";
+import ofxToJson from "../../parsers/ofx_to_json";
 
 suite("ofxToJson Test Suite", () => {
   test("should convert OFX to JSON", () => {
@@ -29,13 +29,12 @@ NEWFILEUID:NONE
     const result = ofxToJson(ofxContent);
 
     assert.ok(result);
-    assert.strictEqual(typeof result, "string");
+    assert.strictEqual(typeof result, "object");
 
-    const parsed = JSON.parse(result);
-    assert.ok(parsed.header);
-    assert.ok(parsed.body);
-    assert.strictEqual(parsed.header.OFXHEADER, "100");
-    assert.strictEqual(parsed.header.VERSION, "102");
+    assert.ok(result.header);
+    assert.ok(result.body);
+    assert.strictEqual(result.header.OFXHEADER, "100");
+    assert.strictEqual(result.header.VERSION, "102");
   });
 
   test("should parse OFX header correctly", () => {
@@ -47,11 +46,10 @@ VERSION:102
 </OFX>`;
 
     const result = ofxToJson(ofxContent);
-    const parsed = JSON.parse(result);
 
-    assert.strictEqual(parsed.header.OFXHEADER, "100");
-    assert.strictEqual(parsed.header.DATA, "OFXSGML");
-    assert.strictEqual(parsed.header.VERSION, "102");
+    assert.strictEqual(result.header.OFXHEADER, "100");
+    assert.strictEqual(result.header.DATA, "OFXSGML");
+    assert.strictEqual(result.header.VERSION, "102");
   });
 
   test("should parse nested OFX tags", () => {
@@ -68,13 +66,12 @@ VERSION:102
 </OFX>`;
 
     const result = ofxToJson(ofxContent);
-    const parsed = JSON.parse(result);
 
-    assert.ok(parsed.body.OFX);
-    assert.ok(parsed.body.OFX.SIGNONMSGSRSV1);
-    assert.ok(parsed.body.OFX.SIGNONMSGSRSV1.SONRS);
-    assert.ok(parsed.body.OFX.SIGNONMSGSRSV1.SONRS.STATUS);
-    assert.strictEqual(parsed.body.OFX.SIGNONMSGSRSV1.SONRS.STATUS.CODE, 0);
+    assert.ok(result.body.OFX);
+    assert.ok(result.body.OFX.SIGNONMSGSRSV1);
+    assert.ok(result.body.OFX.SIGNONMSGSRSV1.SONRS);
+    assert.ok(result.body.OFX.SIGNONMSGSRSV1.SONRS.STATUS);
+    assert.strictEqual(result.body.OFX.SIGNONMSGSRSV1.SONRS.STATUS.CODE, 0);
   });
 
   test("should convert numeric values to numbers", () => {
@@ -90,12 +87,11 @@ VERSION:102
 </OFX>`;
 
     const result = ofxToJson(ofxContent);
-    const parsed = JSON.parse(result);
 
-    assert.strictEqual(typeof parsed.body.OFX.BANKTRANLIST.STMTTRN.TRNAMT, "number");
-    assert.strictEqual(parsed.body.OFX.BANKTRANLIST.STMTTRN.TRNAMT, 1000.0);
-    assert.strictEqual(typeof parsed.body.OFX.BANKTRANLIST.STMTTRN.FITID, "string");
-    assert.strictEqual(parsed.body.OFX.BANKTRANLIST.STMTTRN.FITID, "TXN001");
+    assert.strictEqual(typeof result.body.OFX.BANKTRANLIST.STMTTRN.TRNAMT, "number");
+    assert.strictEqual(result.body.OFX.BANKTRANLIST.STMTTRN.TRNAMT, 1000.0);
+    assert.strictEqual(typeof result.body.OFX.BANKTRANLIST.STMTTRN.FITID, "string");
+    assert.strictEqual(result.body.OFX.BANKTRANLIST.STMTTRN.FITID, "TXN001");
   });
 
   test("should handle multiple transactions as array", () => {
@@ -115,12 +111,11 @@ VERSION:102
 </OFX>`;
 
     const result = ofxToJson(ofxContent);
-    const parsed = JSON.parse(result);
 
-    assert.ok(Array.isArray(parsed.body.OFX.BANKTRANLIST.STMTTRN));
-    assert.strictEqual(parsed.body.OFX.BANKTRANLIST.STMTTRN.length, 2);
-    assert.strictEqual(parsed.body.OFX.BANKTRANLIST.STMTTRN[0].TRNAMT, 100.0);
-    assert.strictEqual(parsed.body.OFX.BANKTRANLIST.STMTTRN[1].TRNAMT, 200.0);
+    assert.ok(Array.isArray(result.body.OFX.BANKTRANLIST.STMTTRN));
+    assert.strictEqual(result.body.OFX.BANKTRANLIST.STMTTRN.length, 2);
+    assert.strictEqual(result.body.OFX.BANKTRANLIST.STMTTRN[0].TRNAMT, 100.0);
+    assert.strictEqual(result.body.OFX.BANKTRANLIST.STMTTRN[1].TRNAMT, 200.0);
   });
 
   test("should handle XML-style single-line tags", () => {
@@ -132,10 +127,9 @@ VERSION:102
 </OFX>`;
 
     const result = ofxToJson(ofxContent);
-    const parsed = JSON.parse(result);
 
-    assert.strictEqual(parsed.body.OFX.BANKID, 999);
-    assert.strictEqual(parsed.body.OFX.ACCTID, 123456);
+    assert.strictEqual(result.body.OFX.BANKID, 999);
+    assert.strictEqual(result.body.OFX.ACCTID, 123456);
   });
 
   test("should handle empty lines", () => {
@@ -148,10 +142,9 @@ VERSION:102
 </OFX>`;
 
     const result = ofxToJson(ofxContent);
-    const parsed = JSON.parse(result);
 
-    assert.ok(parsed.body.OFX);
-    assert.strictEqual(parsed.body.OFX.BANKID, 999);
+    assert.ok(result.body.OFX);
+    assert.strictEqual(result.body.OFX.BANKID, 999);
   });
 
   test("should convert complex OFX file", () => {
@@ -211,15 +204,14 @@ NEWFILEUID:NONE
 </OFX>`;
 
     const result = ofxToJson(ofxContent);
-    const parsed = JSON.parse(result);
 
-    assert.ok(parsed.header);
-    assert.ok(parsed.body);
-    assert.strictEqual(parsed.header.OFXHEADER, "100");
-    assert.ok(parsed.body.OFX.BANKMSGSRSV1);
-    assert.ok(parsed.body.OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.BANKTRANLIST.STMTTRN);
+    assert.ok(result.header);
+    assert.ok(result.body);
+    assert.strictEqual(result.header.OFXHEADER, "100");
+    assert.ok(result.body.OFX.BANKMSGSRSV1);
+    assert.ok(result.body.OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.BANKTRANLIST.STMTTRN);
     assert.strictEqual(
-      parsed.body.OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.BANKTRANLIST.STMTTRN.TRNAMT,
+      result.body.OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.BANKTRANLIST.STMTTRN.TRNAMT,
       1000.0
     );
   });
