@@ -2,6 +2,10 @@
 
 All notable changes to the "OFX File Support" extension will be documented in this file.
 
+## [1.0.3]
+
+- Add preview image in README.md
+
 ## [1.0.2]
 
 - Add export OFX to JSON functionality
