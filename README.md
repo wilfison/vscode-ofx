@@ -2,6 +2,8 @@
 
 Language support for Open Financial Exchange (OFX) files in Visual Studio Code.
 
+![Preview](https://raw.githubusercontent.com/wilfison/vscode-ofx/main/imgs/preview.png)
+
 ## Features
 
 This extension provides syntax highlighting and language support for OFX (Open Financial Exchange) files, commonly used by financial institutions to exchange financial data.
