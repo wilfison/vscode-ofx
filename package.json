@@ -2,7 +2,7 @@
   "name": "ofx",
   "displayName": "OFX File Support",
   "description": "Language support for Open Financial Exchange (OFX) files",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "icon": "imgs/icon.png",
   "galleryBanner": {
     "color": "#fff6e8",

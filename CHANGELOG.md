@@ -2,9 +2,10 @@
 
 All notable changes to the "OFX File Support" extension will be documented in this file.
 
-## [Unreleased]
+## [1.0.4]
 
 - Inprove report performance.
+- Add search functionality in dashboard webview panel.
 
 ## [1.0.3]
 
