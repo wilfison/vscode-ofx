@@ -2,8 +2,8 @@ import fs from "node:fs";
 import * as vscode from "vscode";
 
 import ofxToJSON from "./parsers/ofx_to_json";
-import { OFXBody, OFXDocument, OFXReport, ReportTransaction } from "./types/ofx";
-import { currencyLocales, getWebviewLabels } from "./languages";
+import { OFXDocument, OFXReport, ReportTransaction } from "./types/ofx";
+import { getWebviewLabels } from "./languages";
 import { Reporter } from "./reporter";
 
 export class OFXWebviewPanel {
@@ -11,10 +11,6 @@ export class OFXWebviewPanel {
   private readonly panel: vscode.WebviewPanel;
   private disposables: vscode.Disposable[] = [];
   private reporter: Reporter = new Reporter();
-  private formatter: Intl.NumberFormat = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
 
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
     this.panel = panel;
@@ -45,8 +41,7 @@ export class OFXWebviewPanel {
 
     try {
       const ofxData = ofxToJSON(text);
-      const report = ofxData.report;
-      this.formatter = this.buildFormatter(ofxData.body.OFX);
+      const report = this.reporter.reportTransactions(ofxData.body.OFX);
       this.panel.webview.html = this.getHtmlContent(ofxData, report);
 
       // Handle messages from the webview
@@ -66,72 +61,27 @@ export class OFXWebviewPanel {
     }
   }
 
-  private getAccountInfo(ofxBody: OFXBody): string {
-    let accountInfo = "";
-
-    if (ofxBody.BANKMSGSRSV1) {
-      const stmt = Array.isArray(ofxBody.BANKMSGSRSV1.STMTTRNRS)
-        ? ofxBody.BANKMSGSRSV1.STMTTRNRS[0]
-        : ofxBody.BANKMSGSRSV1.STMTTRNRS;
-
-      if (stmt?.STMTRS?.BANKACCTFROM) {
-        const acct = stmt.STMTRS.BANKACCTFROM;
-        accountInfo = `{{LABEL_BANK}}: ${acct.BANKID} | {{LABEL_ACCOUNT}}: ${acct.ACCTID} | {{LABEL_TYPE}}: ${acct.ACCTTYPE}`;
-      }
-
-      if (stmt?.STMTRS?.LEDGERBAL) {
-        const balance = stmt.STMTRS.LEDGERBAL;
-        accountInfo += ` | {{LABEL_BALANCE}}: ${this.formatCurrency(balance.BALAMT)}`;
-      }
-    }
-
-    return accountInfo;
-  }
-
-  private buildFormatter(ofxBody: OFXBody): Intl.NumberFormat {
-    let ofxCurrency = "USD";
-
-    if (ofxBody.BANKMSGSRSV1?.STMTTRNRS) {
-      const stmtTrnrs = ofxBody.BANKMSGSRSV1.STMTTRNRS;
-      if (Array.isArray(stmtTrnrs)) {
-        ofxCurrency = String(stmtTrnrs[0]?.STMTRS?.CURDEF);
-      } else {
-        ofxCurrency = String(stmtTrnrs?.STMTRS?.CURDEF);
-      }
-    }
-
-    if (!ofxCurrency) {
-      ofxCurrency = "USD";
-    }
-
-    const locale =
-      Object.entries(currencyLocales).find(([, v]) => v.currency === ofxCurrency)?.[1] ||
-      currencyLocales.USD;
-
-    return new Intl.NumberFormat(locale.locale, {
-      style: "currency",
-      currency: locale.currency,
-    });
-  }
-
-  private formatCurrency(amount: number): string {
-    return this.formatter.format(amount);
-  }
-
   private getHtmlContent(ofxData: OFXDocument, report: OFXReport, filter?: string): string {
     const filteredTransactions = filter
       ? report.transactions.filter((t) => t.type === filter)
       : report.transactions;
 
-    const accountInfo = this.getAccountInfo(ofxData.body.OFX);
-
     let template = fs.readFileSync(__dirname + "/../templates/panel.html", "utf8");
 
-    template = template.replace("{{ACCOUNT_INFO}}", accountInfo);
-    template = template.replace("{{TOTAL_INCOME}}", this.formatCurrency(report.total_income));
-    template = template.replace("{{TOTAL_EXPENSES}}", this.formatCurrency(report.total_expenses));
-    template = template.replace("{{NET_BALANCE}}", this.formatCurrency(report.net_balance));
-    template = template.replace("{{TOTAL_TRANSACTIONS}}", String(report.total_transactions));
+    template = template.replace("{{ACCOUNT_INFO}}", report.info);
+    template = template.replace(
+      "{{TOTAL_INCOME}}",
+      this.reporter.formatCurrency(report.total_income)
+    );
+    template = template.replace(
+      "{{TOTAL_EXPENSES}}",
+      this.reporter.formatCurrency(report.total_expenses)
+    );
+    template = template.replace(
+      "{{NET_BALANCE}}",
+      this.reporter.formatCurrency(report.net_balance)
+    );
+    template = template.replace("{{TOTAL_TRANSACTIONS}}", String(report.transactions_size));
     template = template.replaceAll("{{INCOME_PERCENT}}", report.income_percent.toFixed(2));
     template = template.replaceAll("{{EXPENSES_PERCENT}}", report.expenses_percent.toFixed(2));
 
@@ -139,7 +89,7 @@ export class OFXWebviewPanel {
       "{{FILTER_BUTTONS}}",
       `
       <button class="filter-btn ${!filter ? "active" : ""}" onclick="filterTransactions('')">
-        All (${report.transactions.length})
+        {{LABEL_FILTER_ALL}} (${report.transactions.length})
         </button>
         ${report.transaction_types
           .map(
@@ -234,7 +184,7 @@ export class OFXWebviewPanel {
           ${transaction.name || transaction.memo || "-"}
         </td>
         <td class="amount ${transacitionTypeClass}">
-            ${this.formatCurrency(transaction.amount)}
+            ${transaction.ammount_currency}
         </td>
         <td style="font-family: monospace; font-size: 12px;">
           ${transaction.id}

@@ -69,4 +69,48 @@ export const currencyLocales = {
     locale: "pt-BR",
     currency: "BRL",
   },
+  EUR: {
+    locale: "de-DE",
+    currency: "EUR",
+  },
+  GBP: {
+    locale: "en-GB",
+    currency: "GBP",
+  },
+  JPY: {
+    locale: "ja-JP",
+    currency: "JPY",
+  },
+  CNY: {
+    locale: "zh-CN",
+    currency: "CNY",
+  },
+  INR: {
+    locale: "hi-IN",
+    currency: "INR",
+  },
+  CAD: {
+    locale: "en-CA",
+    currency: "CAD",
+  },
+  AUD: {
+    locale: "en-AU",
+    currency: "AUD",
+  },
+  CHF: {
+    locale: "de-CH",
+    currency: "CHF",
+  },
+  RUB: {
+    locale: "ru-RU",
+    currency: "RUB",
+  },
+  MXN: {
+    locale: "es-MX",
+    currency: "MXN",
+  },
+  ZAR: {
+    locale: "en-ZA",
+    currency: "ZAR",
+  },
 };

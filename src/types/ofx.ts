@@ -3,6 +3,7 @@ export interface ReportTransaction {
   type: string;
   date: Date;
   amount: number;
+  ammount_currency: string;
   id: string;
   memo?: string;
   name?: string;
@@ -167,10 +168,12 @@ export interface OFXBody {
 }
 
 export interface OFXReport {
+  info: string;
   total_income: number;
   total_expenses: number;
   net_balance: number;
-  total_transactions: number;
+  balance: number;
+  transactions_size: number;
   income_percent: number;
   expenses_percent: number;
   transaction_types: string[];
@@ -180,7 +183,6 @@ export interface OFXReport {
 // Complete OFX file structure
 export interface OFXDocument {
   header: OFXHeader;
-  report: OFXReport;
   body: {
     OFX: OFXBody;
   };

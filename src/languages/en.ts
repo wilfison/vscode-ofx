@@ -100,6 +100,7 @@ const webviewLabels = {
   DESCRIPTION: "Description",
   AMOUNT: "Amount",
   ID: "ID",
+  FILTER_ALL: "All",
 };
 
 const en: LanguageRegistry = {
