@@ -88,15 +88,19 @@ export class OFXWebviewPanel {
     template = template.replace(
       "{{FILTER_BUTTONS}}",
       `
-      <button class="filter-btn ${!filter ? "active" : ""}" onclick="filterTransactions('')">
+      <button 
+        class="filter-btn ${!filter ? "active" : ""}" 
+        onclick="filterTransactions('')"
+        title="Show all transactions">
         {{LABEL_FILTER_ALL}} (${report.transactions.length})
-        </button>
+      </button>
         ${report.transaction_types
           .map(
             (type) => `
             <button
               class="filter-btn ${filter === type ? "active" : ""}" 
-              onclick="filterTransactions('${type}')">
+              onclick="filterTransactions('${type}')"
+              title="Filter by ${type} transactions">
                 ${type} (${report.transactions.filter((t) => t.type === type).length})
             </button>
         `

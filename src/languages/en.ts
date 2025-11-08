@@ -101,6 +101,7 @@ const webviewLabels = {
   AMOUNT: "Amount",
   ID: "ID",
   FILTER_ALL: "All",
+  SEARCH_PLACEHOLDER: "Search transactions...",
 };
 
 const en: LanguageRegistry = {
