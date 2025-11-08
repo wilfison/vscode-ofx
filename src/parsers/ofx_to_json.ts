@@ -1,8 +1,10 @@
 import { OFXDocument } from "../types/ofx";
+import { Reporter } from "../reporter";
 
 function ofxToJSON(text: string): OFXDocument {
   const result: any = {
     header: {},
+    report: {},
     body: {},
   };
 
@@ -61,6 +63,9 @@ function ofxToJSON(text: string): OFXDocument {
       }
     }
   }
+
+  const reporter = new Reporter();
+  result.report = reporter.reportTransactions(result.body.OFX);
 
   return result;
 }

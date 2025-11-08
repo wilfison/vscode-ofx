@@ -1,3 +1,13 @@
+// Report transaction structure
+export interface ReportTransaction {
+  type: string;
+  date: Date;
+  amount: number;
+  id: string;
+  memo?: string;
+  name?: string;
+}
+
 /**
  * OFX (Open Financial Exchange) Type Definitions
  */
@@ -156,9 +166,21 @@ export interface OFXBody {
   [key: string]: any;
 }
 
+export interface OFXReport {
+  total_income: number;
+  total_expenses: number;
+  net_balance: number;
+  total_transactions: number;
+  income_percent: number;
+  expenses_percent: number;
+  transaction_types: string[];
+  transactions: ReportTransaction[];
+}
+
 // Complete OFX file structure
 export interface OFXDocument {
   header: OFXHeader;
+  report: OFXReport;
   body: {
     OFX: OFXBody;
   };

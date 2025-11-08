@@ -2,22 +2,15 @@ import fs from "node:fs";
 import * as vscode from "vscode";
 
 import ofxToJSON from "./parsers/ofx_to_json";
-import { OFXBody, OFXDocument } from "./types/ofx";
+import { OFXBody, OFXDocument, OFXReport, ReportTransaction } from "./types/ofx";
 import { currencyLocales, getWebviewLabels } from "./languages";
-
-interface Transaction {
-  type: string;
-  date: string;
-  amount: number;
-  id: string;
-  memo?: string;
-  name?: string;
-}
+import { Reporter } from "./reporter";
 
 export class OFXWebviewPanel {
   private static currentPanel: OFXWebviewPanel | undefined;
   private readonly panel: vscode.WebviewPanel;
   private disposables: vscode.Disposable[] = [];
+  private reporter: Reporter = new Reporter();
   private formatter: Intl.NumberFormat = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -52,16 +45,16 @@ export class OFXWebviewPanel {
 
     try {
       const ofxData = ofxToJSON(text);
+      const report = ofxData.report;
       this.formatter = this.buildFormatter(ofxData.body.OFX);
-      const transactions = this.extractTransactions(ofxData.body.OFX);
-      this.panel.webview.html = this.getHtmlContent(ofxData, transactions);
+      this.panel.webview.html = this.getHtmlContent(ofxData, report);
 
       // Handle messages from the webview
       this.panel.webview.onDidReceiveMessage(
         (message) => {
           switch (message.command) {
             case "filter":
-              this.panel.webview.html = this.getHtmlContent(ofxData, transactions, message.filter);
+              this.panel.webview.html = this.getHtmlContent(ofxData, report, message.filter);
               break;
           }
         },
@@ -71,78 +64,6 @@ export class OFXWebviewPanel {
     } catch (error) {
       this.panel.webview.html = this.getErrorHtml(String(error));
     }
-  }
-
-  private extractTransactions(ofxBody: OFXBody): Transaction[] {
-    const transactions: Transaction[] = [];
-
-    // Extract bank transactions
-    if (ofxBody.BANKMSGSRSV1) {
-      const bankMsg = ofxBody.BANKMSGSRSV1;
-      const stmtTrnrs = Array.isArray(bankMsg.STMTTRNRS) ? bankMsg.STMTTRNRS : [bankMsg.STMTTRNRS];
-
-      for (const stmt of stmtTrnrs) {
-        if (stmt.STMTRS?.BANKTRANLIST) {
-          const tranList = stmt.STMTRS.BANKTRANLIST.STMTTRN;
-          const trans = Array.isArray(tranList) ? tranList : [tranList];
-
-          for (const tran of trans) {
-            if (tran) {
-              transactions.push({
-                type: tran.TRNTYPE,
-                date: this.formatDate(tran.DTPOSTED),
-                amount: Number(tran.TRNAMT),
-                id: tran.FITID,
-                memo: tran.MEMO,
-                name: tran.NAME,
-              });
-            }
-          }
-        }
-      }
-    }
-
-    // Extract credit card transactions
-    if (ofxBody.CREDITCARDMSGSRSV1) {
-      const ccMsg = ofxBody.CREDITCARDMSGSRSV1;
-      const ccStmtTrnrs = Array.isArray(ccMsg.CCSTMTTRNRS)
-        ? ccMsg.CCSTMTTRNRS
-        : [ccMsg.CCSTMTTRNRS];
-
-      for (const stmt of ccStmtTrnrs) {
-        if (stmt.CCSTMTRS?.BANKTRANLIST) {
-          const tranList = stmt.CCSTMTRS.BANKTRANLIST.STMTTRN;
-          const trans = Array.isArray(tranList) ? tranList : [tranList];
-
-          for (const tran of trans) {
-            if (tran) {
-              transactions.push({
-                type: tran.TRNTYPE,
-                date: this.formatDate(tran.DTPOSTED),
-                amount: Number(tran.TRNAMT),
-                id: tran.FITID,
-                memo: tran.MEMO,
-                name: tran.NAME,
-              });
-            }
-          }
-        }
-      }
-    }
-
-    return transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }
-
-  private formatDate(dateStr: string): string {
-    if (!dateStr || dateStr.length < 8) {
-      return dateStr;
-    }
-
-    const year = String(dateStr).substring(0, 4);
-    const month = String(dateStr).substring(4, 6);
-    const day = String(dateStr).substring(6, 8);
-
-    return `${year}-${month}-${day}`;
   }
 
   private getAccountInfo(ofxBody: OFXBody): string {
@@ -197,49 +118,36 @@ export class OFXWebviewPanel {
     return this.formatter.format(amount);
   }
 
-  private getHtmlContent(
-    ofxData: OFXDocument,
-    transactions: Transaction[],
-    filter?: string
-  ): string {
+  private getHtmlContent(ofxData: OFXDocument, report: OFXReport, filter?: string): string {
     const filteredTransactions = filter
-      ? transactions.filter((t) => t.type === filter)
-      : transactions;
+      ? report.transactions.filter((t) => t.type === filter)
+      : report.transactions;
 
-    const income = transactions.filter((t) => t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
-    const expenses = Math.abs(
-      transactions.filter((t) => t.amount < 0).reduce((sum, t) => sum + t.amount, 0)
-    );
-
-    const incomePercent = ((income * 100) / (income + expenses || 1)).toFixed(2);
-    const expensesPercent = ((expenses * 100) / (income + expenses || 1)).toFixed(2);
-
-    const transactionTypes = Array.from(new Set(transactions.map((t) => t.type)));
     const accountInfo = this.getAccountInfo(ofxData.body.OFX);
 
     let template = fs.readFileSync(__dirname + "/../templates/panel.html", "utf8");
 
     template = template.replace("{{ACCOUNT_INFO}}", accountInfo);
-    template = template.replace("{{TOTAL_INCOME}}", this.formatCurrency(income));
-    template = template.replace("{{TOTAL_EXPENSES}}", this.formatCurrency(expenses));
-    template = template.replace("{{NET_BALANCE}}", this.formatCurrency(income - expenses));
-    template = template.replace("{{TOTAL_TRANSACTIONS}}", transactions.length.toString());
-    template = template.replaceAll("{{INCOME_PERCENT}}", incomePercent);
-    template = template.replaceAll("{{EXPENSES_PERCENT}}", expensesPercent);
+    template = template.replace("{{TOTAL_INCOME}}", this.formatCurrency(report.total_income));
+    template = template.replace("{{TOTAL_EXPENSES}}", this.formatCurrency(report.total_expenses));
+    template = template.replace("{{NET_BALANCE}}", this.formatCurrency(report.net_balance));
+    template = template.replace("{{TOTAL_TRANSACTIONS}}", String(report.total_transactions));
+    template = template.replaceAll("{{INCOME_PERCENT}}", report.income_percent.toFixed(2));
+    template = template.replaceAll("{{EXPENSES_PERCENT}}", report.expenses_percent.toFixed(2));
 
     template = template.replace(
       "{{FILTER_BUTTONS}}",
       `
       <button class="filter-btn ${!filter ? "active" : ""}" onclick="filterTransactions('')">
-        All (${transactions.length})
+        All (${report.transactions.length})
         </button>
-        ${transactionTypes
+        ${report.transaction_types
           .map(
             (type) => `
             <button
               class="filter-btn ${filter === type ? "active" : ""}" 
               onclick="filterTransactions('${type}')">
-                ${type} (${transactions.filter((t) => t.type === type).length})
+                ${type} (${report.transactions.filter((t) => t.type === type).length})
             </button>
         `
           )
@@ -309,13 +217,13 @@ export class OFXWebviewPanel {
 </html>`;
   }
 
-  private getTransactionRowHtml(transaction: Transaction): string {
+  private getTransactionRowHtml(transaction: ReportTransaction): string {
     const transacitionTypeClass = transaction.amount >= 0 ? "positive" : "negative";
 
     return `
       <tr>
         <td>
-          ${transaction.date}
+          ${transaction.date.toLocaleDateString()}
         </td>
         <td>
           <span class="transaction-type ${transacitionTypeClass}">

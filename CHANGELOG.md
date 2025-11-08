@@ -2,6 +2,10 @@
 
 All notable changes to the "OFX File Support" extension will be documented in this file.
 
+## [Unreleased]
+
+- Inprove report performance.
+
 ## [1.0.3]
 
 - Add preview image in README.md
