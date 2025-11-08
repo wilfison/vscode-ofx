@@ -5,8 +5,8 @@
   "version": "1.0.3",
   "icon": "imgs/icon.png",
   "galleryBanner": {
-    "color": "#2A5286",
-    "theme": "dark"
+    "color": "#fff6e8",
+    "theme": "light"
   },
   "publisher": "wilfison",
   "author": {
